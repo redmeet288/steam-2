@@ -1,0 +1,18 @@
+[
+  {
+    "Title": "The Witcher 3",
+    "Developer": "CD Projekt",
+    "Year": 2015,
+    "ISBN": "1234567890",
+    "Price": 499.99,
+    "Status": 0
+  },
+  {
+    "Title": "Sims",
+    "Developer": "Maxis",
+    "Year": 2000,
+    "ISBN": "0987654321",
+    "Price": 299.99,
+    "Status": 0
+  }
+]
