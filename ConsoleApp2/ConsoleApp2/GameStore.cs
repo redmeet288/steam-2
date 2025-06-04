@@ -52,7 +52,7 @@ namespace SteamApp
             Console.Write("название?: ");
             string title = Console.ReadLine();
             Game game = Games.FirstOrDefault(g => g.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
-            if (game.Title == title)
+            if (game != null)
             {
                 Console.WriteLine("Игра уже есть.");
                 return;
