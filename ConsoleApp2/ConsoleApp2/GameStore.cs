@@ -1,5 +1,6 @@
 using SteamApp.Enums;
 using SteamApp.Utilities;
+using System.Reflection;
 using System.Text.Json;
 
 namespace SteamApp
@@ -9,6 +10,8 @@ namespace SteamApp
         public List<Game> Games { get; set; } = new();
         public List<Transaction> Transactions { get; set; } = new();
         public User User { get; set; }
+
+        public List<string> Games_user = new List<string>();
 
         public event Action<Game> OnGamePurchased;
 
@@ -20,7 +23,7 @@ namespace SteamApp
             while (!exit)
             {
                 Console.WriteLine($"\nБаланс: {User.Balance}р");
-                Console.WriteLine("1. Список игр\n2. Купить игру\n3. Пополнить баланс\n4. Показать все игры\n5. Выход");
+                Console.WriteLine("1. Список игр\n2. Купить игру\n3. Пополнить баланс\n4. Показать купленые игры\n5. Добавить новую игру\n6. Выход");
                 var input = Console.ReadLine();
                 switch (input)
                 {
@@ -28,7 +31,8 @@ namespace SteamApp
                     case "2": BuyGame(); break;
                     case "3": AddBalance(); break;
                     case "4": ShowAllGames(); break;
-                    case "5": exit=true; break;
+                    case "5": AddNewGame(); break;
+                    case "6": exit=true; break;
                 }
             }
         }
@@ -42,11 +46,50 @@ namespace SteamApp
 
 
 
+        private void AddNewGame()
+        {
+            Games = FileManager.Load<List<Game>>("games.json") ?? new List<Game>();
+            Console.Write("название?: ");
+            string title = Console.ReadLine();
+            Game game = Games.FirstOrDefault(g => g.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+            if (game.Title == title)
+            {
+                Console.WriteLine("Игра уже есть.");
+                return;
+            }
+            Console.Write("создатель?: ");
+            string prod = Console.ReadLine();
+            Console.Write("год?: ");
+            int year = Convert.ToInt32(Console.ReadLine());
+            Console.Write("ISDN?: ");
+            string isbn = Console.ReadLine();
+            Console.Write("цена?: ");
+            int cost = Convert.ToInt32(Console.ReadLine());
+
+
+            var newGame = new Game
+            {
+                Title = title,
+                Developer = prod,
+                Year = year,
+                ISBN = isbn,
+                Price = cost,
+                Status = 0
+            };
+
+            Games.Add(newGame);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string updatedJson = JsonSerializer.Serialize(Games, options);
+            File.WriteAllText("games.json", updatedJson);
+
+            Console.WriteLine("Игра добавлена в JSON.");
+        }
+
         private void ShowAllGames()
         {
-            Console.WriteLine("\\nСписок всех игр:");
-            foreach (var game in Games)
-                Console.WriteLine(game.GetInfo());
+            Console.WriteLine("\\nСписок купленых игр:");
+            foreach (var game in Games_user)
+                Console.WriteLine(game);
         }
 
         private void BuyGame()
@@ -66,6 +109,7 @@ namespace SteamApp
                 game.Status = GameStatus.Borrowed;
                 Transactions.Add(new Transaction(DateTime.Now, User, game));
                 OnGamePurchased?.Invoke(game);
+                Games_user.Add(game.Title);
                 Logger.Log($"Куплена игра: {game.Title}");
                 Console.WriteLine("Покупка успешна.");
             }
@@ -85,12 +129,12 @@ namespace SteamApp
 
         public void LoadData()
         {
-            Games = FileManager.Load<List<Game>>("C:\\Users\\admin\\source\\repos\\ConsoleApp2\\ConsoleApp2\\Data\\games.json") ?? new List<Game>();
+            Games = FileManager.Load<List<Game>>("games.json") ?? new List<Game>();
         }
 
         public void SaveData()
         {
-            FileManager.Save("Data/games.json", Games);
+            FileManager.Save("games.json", Games);
         }
 
         public void Dispose()

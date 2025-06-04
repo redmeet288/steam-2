@@ -1,0 +1,34 @@
+[
+  {
+    "Developer": "CD Projekt",
+    "Price": 499.99,
+    "Status": 0,
+    "Title": "The Witcher 3",
+    "Year": 2015,
+    "ISBN": "1234567890"
+  },
+  {
+    "Developer": "Maxis",
+    "Price": 299.99,
+    "Status": 0,
+    "Title": "Sims",
+    "Year": 2000,
+    "ISBN": "0987654321"
+  },
+  {
+    "Developer": "dfsa",
+    "Price": 500,
+    "Status": 0,
+    "Title": "postal 2",
+    "Year": 190,
+    "ISBN": "3189471"
+  },
+  {
+    "Developer": "ya",
+    "Price": 59,
+    "Status": 0,
+    "Title": "postal2",
+    "Year": 1900,
+    "ISBN": "421412"
+  }
+]
