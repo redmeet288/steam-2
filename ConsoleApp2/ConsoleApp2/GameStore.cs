@@ -48,7 +48,7 @@ namespace SteamApp
 
         private void AddNewGame()
         {
-            Games = FileManager.Load<List<Game>>("games.json") ?? new List<Game>();
+            //Games = FileManager.Load<List<Game>>("games.json") ?? new List<Game>();
             Console.Write("название?: ");
             string title = Console.ReadLine();
             Game game = Games.FirstOrDefault(g => g.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
